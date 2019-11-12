@@ -80,3 +80,4 @@ function encBase64(data)
         return b:sub(c+1,c+1)
     end)..({ '', '==', '=' })[#data%3+1])
 end
+

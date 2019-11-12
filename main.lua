@@ -11,6 +11,25 @@ function ClassicGuildManager:HandleChatCommand(input)
   ClassicGuildManager:DisplayExportString(exportString, input == "all")
 end
 
+function ClassicGuildManager:GetSkills()
+  local skills = {}
+  for skillIndex = 1, GetNumSkillLines() do
+    local skillName, isHeader, isExpanded, skillRank, numTempPoints, skillModifier,
+      skillMaxRank, isAbandonable, stepCost, rankCost, minLevel, skillCostType,
+      skillDescription = GetSkillLineInfo(skillIndex)
+
+    if not isHeader and skillIndex > 5 and skillIndex < 14 then
+      skills[skillIndex] = {
+        name = skillName,
+        rank = skillRank,
+        maxRank = skillMaxRank
+      }
+    end
+  end
+
+  return skills
+end
+
 function ClassicGuildManager:GetCharacterData()
   local name = UnitName('player')
   local _, englishClass = UnitClass('player')
@@ -22,11 +41,12 @@ function ClassicGuildManager:GetCharacterData()
     class = englishClass,
     guildName = GetGuildInfo('player'),
     sex = UnitSex('player'),
-    stuff = ClassicGuildManager:GetPlayerStuff()
+    stuff = ClassicGuildManager:GetCharacterStuff(),
+    skill = ClassicGuildManager:GetSkills()
   }
 end
 
-function ClassicGuildManager:GetPlayerStuff()
+function ClassicGuildManager:GetCharacterStuff()
   return {
     head = GetInventoryItemID("player", GetInventorySlotInfo("HeadSlot")),
     neck = GetInventoryItemID("player", GetInventorySlotInfo("NeckSlot")),
@@ -71,10 +91,9 @@ function ClassicGuildManager:GetMemberData(memberIndex)
 end
 
 function ClassicGuildManager:GetGuildMembers()
-  local count = GetNumGuildMembers()
   local members = {}
 
-  for i=1, count do
+  for i=1, GetNumGuildMembers() do
     members[i] = ClassicGuildManager:GetMemberData(i)
   end
   
