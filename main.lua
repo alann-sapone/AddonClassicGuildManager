@@ -92,7 +92,8 @@ function ClassicGuildManager:DisplayExportString(exportString, guildToo)
   local data =  {
     character = charData,
     guild = guildData,
-    version = VERSION
+    version = VERSION,
+    date = time()
   }
 
   local serialized = Serialize(data)
